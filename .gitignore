@@ -1,0 +1,25 @@
+# Please keep this file sorted (LC_COLLATE=C.UTF-8),
+# grouped into the 3 categories below:
+#  - general patterns (match in all directories)
+#  - patterns to match files at the toplevel
+#  - patterns to match files in subdirs
+
+# general patterns
+*.pyc
+*.rpm
+
+# toplevel (/...)
+/*.whl
+/cockpit-*.spec
+/cockpit-*.tar.xz
+/dist/
+/metafile.json
+/node_modules/
+/package-lock.json
+/pkg/
+/runtime-npm-modules.txt
+/tmp/
+/tools/
+
+# subdirs (/subdir/...)
+/packaging/arch/PKGBUILD

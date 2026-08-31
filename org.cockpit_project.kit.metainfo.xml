@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>org.cockpit_project.kit</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Kit</name>
+  <summary>Run the Kit AI coding agent from Cockpit</summary>
+  <description>
+    <p>
+      Adds a Kit page to Cockpit: an overview of Kit's installation,
+      authentication and model status, an embedded terminal that runs
+      the interactive Kit agent, and pages to manage extensions,
+      provider authentication, GitHub integration and configuration
+      for Kit (https://github.com/mark3labs/kit), the extensible AI
+      coding agent CLI.
+    </p>
+  </description>
+  <extends>org.cockpit_project.cockpit</extends>
+  <launchable type="cockpit-manifest">kit</launchable>
+  <url type="homepage">https://github.com/sdrahn/cockpit-kit</url>
+  <url type="bugtracker">https://github.com/sdrahn/cockpit-kit/issues</url>
+  <developer id="io.github.sdrahn">
+    <name>sdrahn</name>
+  </developer>
+</component>

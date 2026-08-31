@@ -1,0 +1,33 @@
+@use "page";
+
+.kit-command-output {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    max-block-size: 24rem;
+    overflow: auto;
+    padding: 0.5rem;
+    background-color: var(--pf-t--global--background--color--secondary--default);
+    border-radius: var(--pf-t--global--border--radius--small);
+}
+
+.kit-config-editor {
+    font-family: monospace;
+}
+
+.kit-auth-provider-row {
+    align-items: center;
+    padding-block: 0.25rem;
+}
+
+.kit-terminal-page {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    block-size: calc(100vh - 14rem);
+    min-block-size: 24rem;
+
+    .kit-terminal-group {
+        flex: 1 1 auto;
+        min-block-size: 0;
+    }
+}

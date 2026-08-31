@@ -1,0 +1,65 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+@use "console.css";
+@use "page";
+@use "global-variables" as *;
+
+.kit-terminal-page .kit-terminal-body,
+.kit-terminal-page .console-ct {
+  inset: 0;
+}
+
+.kit-terminal-page .kit-terminal-body {
+  padding: 0;
+  position: relative;
+  block-size: 100%;
+}
+
+.kit-terminal-page .console-ct {
+  position: absolute;
+}
+
+.black-theme {
+  background-color: #000;
+}
+
+.dark-theme {
+  background-color: #002b36;
+}
+
+.light-theme {
+  background-color: #fdf6e3;
+}
+
+.white-theme {
+  background-color: #fff;
+}
+
+.kit-terminal-group {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+  block-size: 100%;
+
+  > .pf-v6-c-toolbar {
+    padding: 0;
+    flex: 0 0 auto;
+
+    > .pf-v6-c-toolbar__content {
+      padding: 0;
+
+      select {
+        min-inline-size: 5rem;
+      }
+    }
+  }
+}
+
+.kit-terminal-group .kit-terminal-body {
+  flex: 1 1 auto;
+  min-block-size: 20rem;
+}
+
+// HACK for https://forum.patternfly.org/t/read-only-number-input/422
+.font-size .pf-v6-c-form-control[readonly] {
+  cursor: default;
+}
