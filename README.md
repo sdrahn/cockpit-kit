@@ -65,6 +65,11 @@ type-checks it.
 following the same pattern as
 [cockpit-project/starter-kit](https://github.com/cockpit-project/starter-kit).
 
+For the [openSUSE Build Service](https://build.opensuse.org/) (openSUSE
+Tumbleweed/Leap and SLE), use `packaging/obs/cockpit-kit.spec` instead — see
+[`packaging/obs/README.md`](packaging/obs/README.md) for the build and
+submission workflow.
+
 ## Design notes
 
 Kit is a terminal-first tool (an interactive Bubble Tea TUI, plus a
