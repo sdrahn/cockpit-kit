@@ -70,6 +70,8 @@ export const Application = () => {
                                 <br />
                                 <code>go install github.com/mark3labs/kit/cmd/kit@latest</code>
                                 <br />
+                                <code>zypper in kit</code>
+                                <br />
                                 {_("See the ")}
                                 <a href="https://github.com/mark3labs/kit" target="_blank" rel="noopener noreferrer">
                                     {_("Kit project")}
