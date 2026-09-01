@@ -2,13 +2,13 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActionGroup, Form, FormGroup } from "@patternfly/react-core/dist/esm/components/Form/index.js";
 import { Button } from "@patternfly/react-core/dist/esm/components/Button/index.js";
 import { Checkbox } from "@patternfly/react-core/dist/esm/components/Checkbox/index.js";
 import { Content } from "@patternfly/react-core/dist/esm/components/Content/index.js";
 import { Flex, FlexItem } from "@patternfly/react-core/dist/esm/layouts/Flex/index.js";
-import { TextInput } from "@patternfly/react-core/dist/esm/components/TextInput/index.js";
+import { FormSelect, FormSelectOption } from "@patternfly/react-core/dist/esm/components/FormSelect/index.js";
 import cockpit from 'cockpit';
 
 import { CommandOutput } from './CommandOutput';
@@ -17,14 +17,38 @@ import { runKit } from '../kit-client';
 
 const _ = cockpit.gettext;
 
+// Top-level tree entries look like "├── anthropic" / "└── ollama" (child
+// model lines are indented under a "│   " or "    " prefix, so they don't
+// match this anchored at the start of the line).
+function parseProviderIds(output: string): string[] {
+    const ids = [];
+    for (const line of output.split('\n')) {
+        const m = /^[├└]── (\S+)/.exec(line);
+        if (m)
+            ids.push(m[1]);
+    }
+    return ids;
+}
+
 export const Models = () => {
     const [provider, setProvider] = useState('');
+    const [providers, setProviders] = useState<string[]>([]);
     const [showAll, setShowAll] = useState(false);
     const [refreshToken, setRefreshToken] = useState(0);
     const [updating, setUpdating] = useState(false);
     const [updateError, setUpdateError] = useState('');
 
-    const args = ["models", ...(provider.trim() ? [provider.trim()] : []), ...(showAll ? ["--all"] : [])];
+    // kit models <provider> requires an exact, known provider ID (it
+    // errors out otherwise), so the dropdown is only ever populated with
+    // real IDs instead of letting people type an arbitrary filter.
+    useEffect(() => {
+        runKit(["models", ...(showAll ? ["--all"] : [])]).then(result => {
+            setProviders(result.ok ? parseProviderIds(result.output) : []);
+            setProvider('');
+        });
+    }, [showAll, refreshToken]);
+
+    const args = ["models", ...(provider ? [provider] : []), ...(showAll ? ["--all"] : [])];
 
     const onUpdate = () => {
         setUpdating(true);
@@ -48,12 +72,14 @@ export const Models = () => {
                 <Flex alignItems={{ default: 'alignItemsFlexEnd' }}>
                     <FlexItem>
                         <FormGroup label={_("Provider")} fieldId="kit-models-provider">
-                            <TextInput
+                            <FormSelect
 id="kit-models-provider"
-                                       placeholder={_("all providers")}
-                                       value={provider}
-                                       onChange={(_ev, value) => setProvider(value)}
-                            />
+                                        value={provider}
+                                        onChange={(_ev, value) => setProvider(value)}
+                            >
+                                <FormSelectOption value="" label={_("All providers")} />
+                                {providers.map(id => <FormSelectOption key={id} value={id} label={id} />)}
+                            </FormSelect>
                         </FormGroup>
                     </FlexItem>
                     <FlexItem>
