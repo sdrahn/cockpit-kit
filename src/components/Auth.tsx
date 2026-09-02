@@ -9,7 +9,6 @@ import { Label } from "@patternfly/react-core/dist/esm/components/Label/index.js
 import {
     Modal, ModalBody, ModalFooter, ModalHeader
 } from '@patternfly/react-core/dist/esm/components/Modal/index.js';
-import { Split, SplitItem } from "@patternfly/react-core/dist/esm/layouts/Split/index.js";
 import { InlineNotification } from "cockpit-components-inline-notification";
 import cockpit from 'cockpit';
 
@@ -57,35 +56,37 @@ export const Auth = () => {
             <CommandOutput args={["auth", "status"]} refreshToken={refreshToken} />
 
             <Content component="h3">{_("OAuth login")}</Content>
-            {AUTH_PROVIDERS.map(p => {
-                const status = parseProviderStatus(statusOutput, p.statusLabel);
-                return (
-                    <Split key={p.id} hasGutter className="kit-auth-provider-row">
-                        <SplitItem>{p.name}</SplitItem>
-                        <SplitItem isFilled>
-                            {status &&
-                                <>
-                                    <Label color={STATE_COLORS[status.state]} isCompact>{status.text}</Label>
-                                    {status.detail && <span className="pf-v6-u-color-200 pf-v6-u-ml-sm">{status.detail}</span>}
-                                </>}
-                        </SplitItem>
-                        <SplitItem>
-                            <Button variant="secondary" onClick={() => setLoginProvider(p.id)}>
-                                {_("Log in")}
-                            </Button>
-                        </SplitItem>
-                        <SplitItem>
-                            <Button
+            <div className="kit-auth-provider-list">
+                {AUTH_PROVIDERS.map(p => {
+                    const status = parseProviderStatus(statusOutput, p.statusLabel);
+                    return (
+                        <React.Fragment key={p.id}>
+                            <div>{p.name}</div>
+                            <div>
+                                {status &&
+                                    <>
+                                        <Label color={STATE_COLORS[status.state]} isCompact>{status.text}</Label>
+                                        {status.detail && <span className="pf-v6-u-color-200 pf-v6-u-ml-sm">{status.detail}</span>}
+                                    </>}
+                            </div>
+                            <div>
+                                <Button variant="secondary" onClick={() => setLoginProvider(p.id)}>
+                                    {_("Log in")}
+                                </Button>
+                            </div>
+                            <div>
+                                <Button
 variant="secondary" isDanger
-                                    isLoading={busyProvider === p.id} isDisabled={!!busyProvider}
-                                    onClick={() => onLogout(p.id)}
-                            >
-                                {_("Log out")}
-                            </Button>
-                        </SplitItem>
-                    </Split>
-                );
-            })}
+                                        isLoading={busyProvider === p.id} isDisabled={!!busyProvider}
+                                        onClick={() => onLogout(p.id)}
+                                >
+                                    {_("Log out")}
+                                </Button>
+                            </div>
+                        </React.Fragment>
+                    );
+                })}
+            </div>
 
             {logoutResult &&
                 <InlineNotification
