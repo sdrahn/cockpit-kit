@@ -15,42 +15,17 @@ import cockpit from 'cockpit';
 
 import { CommandOutput } from './CommandOutput';
 import { KitTerminal } from './KitTerminal';
+import { AUTH_PROVIDERS, AuthState, parseProviderStatus } from '../auth-status';
 import { runKit } from '../kit-client';
 
 const _ = cockpit.gettext;
 
-// "statusLabel" is the exact prefix "kit auth status" prints for that
-// provider (e.g. "OpenAI: ..."), which differs from the friendlier
-// display "name" used elsewhere on this page.
-const PROVIDERS: { id: string, name: string, statusLabel: string }[] = [
-    { id: "anthropic", name: "Anthropic Claude", statusLabel: "Anthropic Claude" },
-    { id: "openai", name: "OpenAI (ChatGPT/Codex)", statusLabel: "OpenAI" },
-    { id: "copilot", name: "GitHub Copilot", statusLabel: "GitHub Copilot" },
-];
-
-interface ProviderStatus {
-    color: "green" | "orange" | "red" | "grey";
-    text: string;
-    detail: string;
-}
-
-// Parses lines like "Anthropic Claude: ✓ Authenticated (OAuth, stored ...)"
-// or "OpenAI: ✗ Not authenticated" out of "kit auth status" output.
-function parseProviderStatus(output: string, statusLabel: string): ProviderStatus | null {
-    const re = new RegExp(`^${statusLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}: (.+)$`, 'm');
-    const m = re.exec(output);
-    if (!m)
-        return null;
-
-    const line = m[1].trim();
-    if (line.startsWith('✓'))
-        return { color: "green", text: _("Authenticated"), detail: line.replace(/^✓\s*Authenticated\s*/, '') };
-    if (line.startsWith('⚠'))
-        return { color: "orange", text: _("Needs attention"), detail: line.replace(/^⚠️?\s*/, '') };
-    if (line.startsWith('✗'))
-        return { color: "grey", text: _("Not authenticated"), detail: '' };
-    return { color: "red", text: _("Unknown"), detail: line };
-}
+const STATE_COLORS: Record<AuthState, "green" | "orange" | "grey" | "red"> = {
+    authenticated: "green",
+    "needs-attention": "orange",
+    "not-authenticated": "grey",
+    unknown: "red",
+};
 
 export const Auth = () => {
     const [refreshToken, setRefreshToken] = useState(0);
@@ -82,7 +57,7 @@ export const Auth = () => {
             <CommandOutput args={["auth", "status"]} refreshToken={refreshToken} />
 
             <Content component="h3">{_("OAuth login")}</Content>
-            {PROVIDERS.map(p => {
+            {AUTH_PROVIDERS.map(p => {
                 const status = parseProviderStatus(statusOutput, p.statusLabel);
                 return (
                     <Split key={p.id} hasGutter className="kit-auth-provider-row">
@@ -90,7 +65,7 @@ export const Auth = () => {
                         <SplitItem isFilled>
                             {status &&
                                 <>
-                                    <Label color={status.color} isCompact>{status.text}</Label>
+                                    <Label color={STATE_COLORS[status.state]} isCompact>{status.text}</Label>
                                     {status.detail && <span className="pf-v6-u-color-200 pf-v6-u-ml-sm">{status.detail}</span>}
                                 </>}
                         </SplitItem>
