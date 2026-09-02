@@ -1,5 +1,12 @@
 @use "page";
 
+// PatternFly's PageSection defaults to a smaller top/bottom padding than
+// left/right (spacer--md vs spacer--lg); make the content section's top
+// gap match its left gap instead.
+.kit-content-section {
+    --pf-v6-c-page__main-section--PaddingBlockStart: var(--pf-v6-c-page__main-section--PaddingInlineStart);
+}
+
 .kit-command-output {
     white-space: pre-wrap;
     overflow-wrap: break-word;
