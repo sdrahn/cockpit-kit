@@ -1,5 +1,12 @@
 @use "page";
 
+// PatternFly's PageSection defaults to a smaller top/bottom padding than
+// left/right (spacer--md vs spacer--lg); make the content section's top
+// gap match its left gap instead.
+.kit-content-section {
+    --pf-v6-c-page__main-section--PaddingBlockStart: var(--pf-v6-c-page__main-section--PaddingInlineStart);
+}
+
 .kit-command-output {
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -14,9 +21,25 @@
     font-family: monospace;
 }
 
-.kit-auth-provider-row {
+// Per-provider status lists on the Overview and Authentication tabs: a
+// single CSS grid (rather than one flex row per provider) so the name,
+// badge and button columns line up at the same horizontal position
+// regardless of how long each provider's name or status text is.
+.kit-provider-list,
+.kit-auth-provider-list {
+    display: grid;
     align-items: center;
-    padding-block: 0.25rem;
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+}
+
+.kit-provider-list {
+    grid-template-columns: max-content 1fr;
+}
+
+.kit-auth-provider-list {
+    grid-template-columns: max-content 1fr max-content max-content;
+    row-gap: 0.25rem;
 }
 
 .kit-terminal-page {
