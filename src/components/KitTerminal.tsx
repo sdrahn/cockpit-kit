@@ -28,9 +28,11 @@ interface KitTerminalProps {
     /** Bump this to force the terminal to restart with a fresh process. */
     resetKey?: number | string;
     parentId: string;
+    /** Extra toolbar content (e.g. a working directory picker), shown before "Font size". */
+    toolbarStart?: React.ReactNode;
 }
 
-export const KitTerminal = ({ args, directory, resetKey, parentId }: KitTerminalProps) => {
+export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart }: KitTerminalProps) => {
     const [pid, setPid] = useState<number | null>(null);
     const [theme, setTheme] = useState<TerminalTheme>(() => (localStorage.getItem('kit:terminal-theme') as TerminalTheme) || "black-theme");
     const [size, setSize] = useState(() => parseInt(localStorage.getItem('kit:terminal-font-size') || "") || 16);
@@ -83,6 +85,7 @@ export const KitTerminal = ({ args, directory, resetKey, parentId }: KitTerminal
         <div className="kit-terminal-group">
             <Toolbar id={`${parentId}-toolbar`}>
                 <ToolbarContent>
+                    {toolbarStart}
                     <ToolbarGroup>
                         <ToolbarItem variant="label" id={`${parentId}-size-select`}>{_("Font size")}</ToolbarItem>
                         <ToolbarItem>
