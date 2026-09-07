@@ -3,12 +3,10 @@
  */
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Content } from "@patternfly/react-core/dist/esm/components/Content/index.js";
-import { Form } from "@patternfly/react-core/dist/esm/components/Form/index.js";
-
+import { ToolbarGroup, ToolbarItem } from "@patternfly/react-core/dist/esm/components/Toolbar/index.js";
+import { FileAutoComplete } from "cockpit-components-file-autocomplete";
 import cockpit from 'cockpit';
 
-import { DirectoryPicker } from './DirectoryPicker';
 import { KitTerminal } from './KitTerminal';
 
 const _ = cockpit.gettext;
@@ -22,8 +20,8 @@ const MIN_HEIGHT_PX = 300;
 // rendered height of the masthead/tabs/page chrome above this element,
 // which isn't something CSS alone can reliably account for. Measure it
 // directly instead: how far this element's top is from the bottom of the
-// viewport, re-measured on resize and whenever the content above it
-// (e.g. a directory picker error) changes height.
+// viewport, re-measured on resize and whenever the surrounding layout
+// changes height.
 function useFillHeight<T extends HTMLElement>() {
     const ref = useRef<T>(null);
     const [height, setHeight] = useState<number | null>(null);
@@ -61,15 +59,25 @@ export const AgentTerminal = ({ homeDirectory }: AgentTerminalProps) => {
     const [directory, setDirectory] = useState(homeDirectory);
     const { ref, height } = useFillHeight<HTMLDivElement>();
 
+    const directoryPicker = (
+        <ToolbarGroup>
+            <ToolbarItem variant="label" id="kit-terminal-directory-label">{_("Working directory")}</ToolbarItem>
+            <ToolbarItem>
+                <FileAutoComplete
+id="kit-terminal-directory"
+                                   onlyDirectories
+                                   isOptionCreatable
+                                   placeholder={_("Path to a directory")}
+                                   value={directory}
+                                   onChange={value => setDirectory(value)}
+                />
+            </ToolbarItem>
+        </ToolbarGroup>
+    );
+
     return (
         <div ref={ref} className="kit-terminal-page" style={height ? { blockSize: `${height}px` } : undefined}>
-            <Form isHorizontal onSubmit={ev => ev.preventDefault()}>
-                <DirectoryPicker id="kit-terminal-directory" directory={directory} onChange={setDirectory} />
-            </Form>
-            <Content component="p" className="pf-v6-u-color-200">
-                {_("Kit sessions are tied to their working directory. Changing it above restarts Kit there.")}
-            </Content>
-            <KitTerminal parentId="kit-terminal" directory={directory} args={[]} />
+            <KitTerminal parentId="kit-terminal" directory={directory} args={[]} toolbarStart={directoryPicker} />
         </div>
     );
 };
