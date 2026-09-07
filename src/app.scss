@@ -5,19 +5,6 @@
 // gap match its left gap instead.
 .kit-content-section {
     --pf-v6-c-page__main-section--PaddingBlockStart: var(--pf-v6-c-page__main-section--PaddingInlineStart);
-    min-block-size: 0;
-}
-
-// Lets a tab's panel (see app.tsx) grow to fill all the vertical space
-// the (already fully page-height-filling) content section has, instead
-// of just taking its own content's natural height and leaving the rest
-// of the section as blank space below it. Used by tabs whose content
-// should use up the full available height, e.g. the Terminal tab.
-.kit-tab-panel-fill {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-block-size: 0;
 }
 
 .kit-command-output {
@@ -55,11 +42,14 @@
     row-gap: 0.25rem;
 }
 
+// block-size is set inline from JS (see useFillHeight in AgentTerminal.tsx):
+// it measures actual remaining viewport space below the element, rather
+// than guessing it from CSS, since that depends on the exact height of
+// the masthead/tabs/page chrome above it.
 .kit-terminal-page {
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
-    flex: 1 1 auto;
     min-block-size: 24rem;
 
     .kit-terminal-group {

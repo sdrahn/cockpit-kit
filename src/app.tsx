@@ -103,9 +103,9 @@ export const Application = () => {
         );
     }
 
-    const tabs: { id: string, title: string, render: () => React.ReactNode, fill?: boolean }[] = [
+    const tabs: { id: string, title: string, render: () => React.ReactNode }[] = [
         { id: "overview", title: _("Overview"), render: () => <Overview version={check.version} onNavigate={setActiveTab} /> },
-        { id: "terminal", title: _("Terminal"), render: () => <AgentTerminal homeDirectory={homeDirectory} />, fill: true },
+        { id: "terminal", title: _("Terminal"), render: () => <AgentTerminal homeDirectory={homeDirectory} /> },
         { id: "models", title: _("Models"), render: () => <Models /> },
         { id: "extensions", title: _("Extensions"), render: () => <Extensions homeDirectory={homeDirectory} /> },
         { id: "auth", title: _("Authentication"), render: () => <Auth /> },
@@ -122,7 +122,7 @@ export const Application = () => {
             </PageSection>
             <PageSection hasBodyWrapper={false} isFilled className="kit-content-section">
                 {tabs.map(t => (visitedTabs.has(t.id) &&
-                    <div key={t.id} hidden={activeTab !== t.id} className={t.fill ? "kit-tab-panel kit-tab-panel-fill" : "kit-tab-panel"}>
+                    <div key={t.id} hidden={activeTab !== t.id} className="kit-tab-panel">
                         {t.render()}
                     </div>))}
             </PageSection>
