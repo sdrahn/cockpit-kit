@@ -15,23 +15,27 @@ templated by this project's own `Makefile` for Fedora/RHEL and, on Fedora
 (PatternFly, xterm.js, ...) as system modules, and OBS build workers have no
 network access during `%build` anyway, so `packaging/obs/cockpit-kit.spec`
 takes the simpler, always-correct route: it ships the already-built `dist/`
-bundle inside the source tarball and just installs it. No `_service` file
-fetches or builds anything on the OBS side — the tarball is built locally
-and uploaded like any other source file.
+bundle inside the source tarball and just installs it.
 
-## 1. Build the source tarball
+That tarball is built by [`.github/workflows/release.yml`](../../.github/workflows/release.yml)
+(via `make dist`, the same target the Fedora package uses) and attached to
+the matching GitHub Release whenever a version tag (`X.Y.Z`, no `v` prefix)
+is pushed. The [`_service`](_service) file here fetches that exact release
+asset with the `download_url` source service. Since OBS build workers have
+no network access, that service can't run automatically server-side —
+`mode="manual"` means it only runs when the packager explicitly invokes
+`osc service manualrun` (or `runall`), which does have network access, and
+the downloaded tarball then gets committed as a normal source file.
 
-From the repository root, with Node.js and npm available:
+## 1. Point `_service` and the spec at a release
 
-```bash
-make dist VERSION=0.1.0
-```
+Pick the version to package (it must already have a tarball attached to
+its GitHub Release — check that `.github/workflows/release.yml` has run for
+that tag, or trigger it manually via `workflow_dispatch` for an older one),
+then bump both of these to match it:
 
-This runs the same `dist` target used for the Fedora package: it installs
-npm dependencies, builds `dist/` in production mode, and produces
-`cockpit-kit-0.1.0.tar.xz` containing the project sources plus the built
-`dist/`. Keep `VERSION` in sync with `Version:` in `cockpit-kit.spec` (and
-with a `git tag` for that release, if you're tagging releases).
+- the version in the `path` param of [`_service`](_service)
+- `Version:` in [`cockpit-kit.spec`](cockpit-kit.spec)
 
 ## 2. Create or update the OBS package
 
@@ -41,13 +45,17 @@ cd <your-namespace>/cockpit-kit
 
 cp /path/to/cockpit-kit/packaging/obs/cockpit-kit.spec .
 cp /path/to/cockpit-kit/packaging/obs/cockpit-kit.changes .
-cp /path/to/cockpit-kit/cockpit-kit-0.1.0.tar.xz .
+cp /path/to/cockpit-kit/packaging/obs/_service .
+
+# Downloads the tarball named in _service (needs network: run this on
+# your own machine, not a build worker) and records it in _servicedata.
+osc service manualrun
 
 # Add a dated entry (or use `osc vc` to open an editor for one)
 osc vc cockpit-kit.changes
 
 osc addremove
-osc commit -m "Update to 0.1.0"
+osc commit -m "Update to 0.1.7"
 ```
 
 ## 3. Test-build locally before committing
@@ -77,3 +85,11 @@ you add some, typically by inheriting from a project like
   Tumbleweed), the `%prep`/`%build` sections here can be extended the same
   way `packaging/cockpit-kit.spec.in` does for Fedora >= 42, guarded by
   `%if 0%{?suse_version}` instead.
+- `osc service manualrun` writes `_servicedata` recording what it fetched;
+  commit that alongside the downloaded tarball. Add a `verify_file`
+  service afterwards (with the tarball's sha256) if you want OBS to
+  re-verify the download on every `manualrun`/`localrun`.
+- To cut a new release: push a plain `X.Y.Z` tag (`git tag 0.1.8 && git
+  push origin 0.1.8`). That alone triggers the GitHub Actions workflow,
+  which builds the tarball and creates (or updates) the matching GitHub
+  Release for it — no need to draft the release by hand first.

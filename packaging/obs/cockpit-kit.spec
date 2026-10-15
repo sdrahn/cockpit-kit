@@ -8,19 +8,20 @@
 #
 
 Name:           cockpit-kit
-Version:        0.1.0
+Version:        0.1.7
 Release:        0
 Summary:        Cockpit UI for the Kit AI coding agent
 License:        LGPL-2.1-or-later
 URL:            https://github.com/sdrahn/cockpit-kit
 
-# Built locally with "make dist" (see packaging/obs/README.md), which
-# bundles the already-built src/ (dist/) alongside the project sources.
-# openSUSE's build workers have no network access during %build, and the
-# JavaScript libraries this UI bundles (PatternFly, xterm.js, ...) are not
-# all packaged as system nodejs modules yet, so unlike some other Cockpit
-# UI modules this package ships a pre-built JavaScript bundle rather than
-# rebuilding it from npm sources.
+# Fetched by the _service (download_url) from this version's GitHub
+# Release asset, built by .github/workflows/release.yml via "make dist".
+# That tarball already contains a pre-built dist/: openSUSE's build
+# workers have no network access during %build, and the JavaScript
+# libraries this UI bundles (PatternFly, xterm.js, ...) are not all
+# packaged as system nodejs modules yet, so unlike some other Cockpit UI
+# modules this package ships a pre-built JavaScript bundle rather than
+# rebuilding it from npm sources. See packaging/obs/README.md.
 Source0:        %{name}-%{version}.tar.xz
 
 BuildArch:      noarch
