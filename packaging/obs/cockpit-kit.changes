@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 15 05:43:58 UTC 2026 - drahn76@gmail.com
+
+- Update to 0.1.8, the first release with the source tarball attached
+  to its GitHub Release (0.1.7 has none, so download_url can't fetch it).
+
+-------------------------------------------------------------------
 Thu Oct 15 05:30:53 UTC 2026 - drahn76@gmail.com
 
 - Update to 0.1.7.
