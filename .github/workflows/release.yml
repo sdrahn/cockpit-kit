@@ -1,0 +1,57 @@
+name: Publish release tarball
+
+# Builds the dist/-included source tarball (via "make dist") that the
+# Fedora and openSUSE packaging both expect, and attaches it to the
+# GitHub Release for the pushed version tag. The OBS packaging
+# (packaging/obs/_service) fetches that exact asset with the download_url
+# service, since OBS build workers have no network access to build it
+# themselves.
+#
+# Tags are plain "X.Y.Z" (no "v" prefix), matching this repo's existing
+# releases. Re-run manually (workflow_dispatch) to (re)attach the tarball
+# to an existing tag/release, e.g. to backfill older releases.
+
+"on":
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing version tag to build and attach the tarball to'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  tarball:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine tag
+        id: tag
+        run: echo "tag=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build release tarball
+        run: make dist VERSION=${{ steps.tag.outputs.tag }}
+
+      - name: Attach tarball to the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          file="cockpit-kit-${TAG}.tar.xz"
+          if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$file" --repo "${{ github.repository }}" --clobber
+          else
+            gh release create "$TAG" "$file" --repo "${{ github.repository }}" \
+              --title "$TAG" --prerelease --generate-notes
+          fi

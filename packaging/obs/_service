@@ -1,0 +1,19 @@
+<!--
+  OBS build workers have no network access, so this can't run
+  automatically server-side (mode="manual" means it only runs when the
+  packager explicitly invokes `osc service manualrun` / `runall` locally,
+  which does have network access). See README.md for the full release
+  workflow.
+
+  Fetches the exact release tarball that .github/workflows/release.yml
+  builds (via "make dist") and attaches to the matching GitHub Release.
+  Bump the version in the path below together with Version: in
+  cockpit-kit.spec, then re-run the service.
+-->
+<services>
+  <service name="download_url" mode="manual">
+    <param name="protocol">https</param>
+    <param name="host">github.com</param>
+    <param name="path">sdrahn/cockpit-kit/releases/download/0.1.7/cockpit-kit-0.1.7.tar.xz</param>
+  </service>
+</services>
