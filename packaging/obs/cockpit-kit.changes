@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 15 05:48:12 UTC 2026 - drahn76@gmail.com
+
+- Own %{_datadir}/cockpit to fix the "directories not owned by a
+  package" post-build check (Cockpit isn't in the build root).
+
+-------------------------------------------------------------------
 Thu Oct 15 05:43:58 UTC 2026 - drahn76@gmail.com
 
 - Update to 0.1.8, the first release with the source tarball attached

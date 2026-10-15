@@ -62,6 +62,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*
 %files
 %doc README.md
 %license LICENSE dist/index.js.LEGAL.txt
+# Cockpit itself owns this, but it's only a runtime Requires (not in the
+# build root), and BuildRequiring it would break targets whose repos don't
+# carry Cockpit. Shared directory ownership is fine in RPM.
+%dir %{_datadir}/cockpit
 %{_datadir}/cockpit/kit
 %{_datadir}/metainfo/org.cockpit_project.kit.metainfo.xml
 
