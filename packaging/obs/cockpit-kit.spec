@@ -8,7 +8,7 @@
 #
 
 Name:           cockpit-kit
-Version:        0.1.7
+Version:        0.1.8
 Release:        0
 Summary:        Cockpit UI for the Kit AI coding agent
 License:        LGPL-2.1-or-later

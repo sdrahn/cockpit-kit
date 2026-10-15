@@ -14,6 +14,6 @@
   <service name="download_url" mode="manual">
     <param name="protocol">https</param>
     <param name="host">github.com</param>
-    <param name="path">sdrahn/cockpit-kit/releases/download/0.1.7/cockpit-kit-0.1.7.tar.xz</param>
+    <param name="path">sdrahn/cockpit-kit/releases/download/0.1.8/cockpit-kit-0.1.8.tar.xz</param>
   </service>
 </services>
