@@ -33,6 +33,18 @@ component of its own and does not require administrator/root access.
   user Cockpit is logged in as. If it's missing, the page shows install
   instructions instead of the usual tabs.
 
+## Copy and paste in the terminal
+
+Kit's TUI does its own mouse selection: drag over text and, on release,
+Kit copies it to your browser clipboard (via OSC 52, which this module
+enables in the terminal). To select with the browser terminal instead,
+hold **Shift** while dragging (**Option** on macOS), then copy with
+Ctrl+Insert or the right-click menu. Paste with Shift+Insert: Kit binds
+Ctrl+V to pasting an image.
+
+Copying to the clipboard needs Cockpit to be served over HTTPS (or
+localhost); browsers don't expose the clipboard API on plain HTTP.
+
 ## Building
 
 ```bash
