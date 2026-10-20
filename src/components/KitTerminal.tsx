@@ -16,6 +16,7 @@ import { EmptyStatePanel } from "cockpit-components-empty-state";
 import { Terminal, TerminalTheme } from "cockpit-components-terminal.jsx";
 import cockpit from 'cockpit';
 
+import { enableTerminalClipboard } from "../terminal-clipboard";
 import "./KitTerminal.scss";
 
 const _ = cockpit.gettext;
@@ -59,6 +60,14 @@ export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart 
         return () => setChannel(prev => { prev?.close(); return null });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [args.join(' '), directory, resetKey]);
+
+    // The Terminal component mounts once a channel exists and then keeps the
+    // same xterm instance across restarts (it just swaps the channel).
+    useEffect(() => {
+        const term = terminalRef.current?.terminal;
+        if (term)
+            enableTerminalClipboard(term);
+    }, [channel]);
 
     const onThemeChanged = (_ev: React.FormEvent<HTMLSelectElement>, value: string) => {
         setTheme(value as TerminalTheme);
