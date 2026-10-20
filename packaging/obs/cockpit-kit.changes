@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Tue Oct 20 07:59:55 UTC 2026 - drahn76@gmail.com
+
+- Update to 0.1.9:
+  * Terminal: text selected with the mouse in Kit's TUI is now copied
+    to the browser clipboard (Kit copies via OSC 52, which the
+    terminal now supports). Shift+drag (Option+drag on macOS) gives a
+    native terminal selection instead.
+
+-------------------------------------------------------------------
 Thu Oct 15 05:48:12 UTC 2026 - drahn76@gmail.com
 
 - Own %{_datadir}/cockpit to fix the "directories not owned by a
