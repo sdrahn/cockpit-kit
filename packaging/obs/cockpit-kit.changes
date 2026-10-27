@@ -1,4 +1,16 @@
 -------------------------------------------------------------------
+Tue Oct 27 12:51:42 UTC 2026 - drahn76@gmail.com
+
+- Update to 0.1.10:
+  * Web pages Kit opens (OAuth sign-in for providers and remote MCP
+    servers) are shown in a panel above the terminal with the full,
+    unwrapped URL, copy and Open buttons, instead of Kit trying to
+    start a browser on the server.
+  * Sign-ins that redirect to a "localhost" callback can be finished
+    by pasting the browser's final address into that panel; Cockpit
+    delivers it to Kit on the server.
+
+-------------------------------------------------------------------
 Tue Oct 20 07:59:55 UTC 2026 - drahn76@gmail.com
 
 - Update to 0.1.9:

@@ -55,7 +55,7 @@ osc service manualrun
 osc vc cockpit-kit.changes
 
 osc addremove
-osc commit -m "Update to 0.1.9"
+osc commit -m "Update to 0.1.10"
 ```
 
 ## 3. Test-build locally before committing
