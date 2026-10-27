@@ -45,6 +45,24 @@ Ctrl+V to pasting an image.
 Copying to the clipboard needs Cockpit to be served over HTTPS (or
 localhost); browsers don't expose the clipboard API on plain HTTP.
 
+## Signing in (OAuth)
+
+Kit runs on the Cockpit host, so when it opens a web page (OAuth sign-in for
+a provider or a remote MCP server) it can't reach your browser. Instead, the
+page shows the full, unwrapped address in a panel above the terminal, with
+**Open** and copy buttons. It works by putting a small `xdg-open` stand-in
+first on Kit's `PATH` (written to `$XDG_RUNTIME_DIR/cockpit-kit/bin`, or
+`~/.cache/cockpit-kit/bin`) that hands the URL to the page.
+
+Some sign-ins (remote MCP servers, OpenAI) finish by redirecting the browser
+to `http://localhost:<port>/...`, where Kit waits for it. Unless your browser
+runs on the Cockpit host, that page fails to load: copy its address from the
+browser's address bar into the panel and press **Finish sign-in**, and
+Cockpit delivers it to Kit on the server. Kit gives up on an MCP sign-in
+after about two minutes, so paste the address promptly. Anthropic asks you to paste a code into
+the terminal instead (Shift+Insert), and GitHub Copilot shows a code to
+enter on GitHub's page.
+
 ## Building
 
 ```bash

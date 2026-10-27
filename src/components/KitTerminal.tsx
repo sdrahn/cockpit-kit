@@ -16,7 +16,10 @@ import { EmptyStatePanel } from "cockpit-components-empty-state";
 import { Terminal, TerminalTheme } from "cockpit-components-terminal.jsx";
 import cockpit from 'cockpit';
 
+import { kitSpawnArgv } from "../kit-spawn";
 import { enableTerminalClipboard } from "../terminal-clipboard";
+import { listenForOpenUrl } from "../terminal-open-url";
+import { OpenUrlAlert } from "./OpenUrlAlert";
 import "./KitTerminal.scss";
 
 const _ = cockpit.gettext;
@@ -38,6 +41,7 @@ export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart 
     const [theme, setTheme] = useState<TerminalTheme>(() => (localStorage.getItem('kit:terminal-theme') as TerminalTheme) || "black-theme");
     const [size, setSize] = useState(() => parseInt(localStorage.getItem('kit:terminal-font-size') || "") || 16);
     const [channel, setChannel] = useState<cockpit.Channel<string> | null>(null);
+    const [openUrl, setOpenUrl] = useState<string | null>(null);
     const terminalRef = useRef<InstanceType<typeof Terminal>>(null);
 
     const webglAvailable = useRef(!!document.createElement("canvas").getContext("webgl2")).current;
@@ -45,7 +49,7 @@ export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart 
     const createChannel = () => {
         const ch = cockpit.channel({
             payload: "stream",
-            spawn: ["kit", ...args],
+            spawn: kitSpawnArgv(args),
             environ: ["TERM=xterm-256color"],
             directory,
             pty: true,
@@ -64,10 +68,20 @@ export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart 
     // The Terminal component mounts once a channel exists and then keeps the
     // same xterm instance across restarts (it just swaps the channel).
     useEffect(() => {
+        setOpenUrl(null);
         const term = terminalRef.current?.terminal;
-        if (term)
-            enableTerminalClipboard(term);
+        if (!term)
+            return;
+        enableTerminalClipboard(term);
+        const listener = listenForOpenUrl(term, setOpenUrl);
+        return () => listener.dispose();
     }, [channel]);
+
+    // The terminal only re-fits itself on window resizes; the URL panel
+    // changes its height without one.
+    useEffect(() => {
+        window.dispatchEvent(new Event("resize"));
+    }, [openUrl]);
 
     const onThemeChanged = (_ev: React.FormEvent<HTMLSelectElement>, value: string) => {
         setTheme(value as TerminalTheme);
@@ -130,6 +144,7 @@ export const KitTerminal = ({ args, directory, resetKey, parentId, toolbarStart 
                     </ToolbarItem>
                 </ToolbarContent>
             </Toolbar>
+            {openUrl && <OpenUrlAlert key={openUrl} url={openUrl} onClose={() => setOpenUrl(null)} />}
             <div className={"kit-terminal-body " + theme} id={parentId}>
                 {channel
                     ? (
