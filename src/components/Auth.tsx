@@ -100,7 +100,7 @@ type={logoutResult.ok ? "success" : "danger"}
                 <ModalHeader title={cockpit.format(_("Log in to $0"), loginProvider)} />
                 <ModalBody>
                     <Content component="p">
-                        {_("Kit will print a URL to open in a browser to complete the OAuth flow. Follow the instructions below.")}
+                        {_("When Kit opens the sign-in page, it appears in a panel above the terminal. Open it from there, then follow the instructions in the panel and the terminal.")}
                     </Content>
                     {loginProvider &&
                         <KitTerminal

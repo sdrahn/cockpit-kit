@@ -63,3 +63,12 @@
 .font-size .pf-v6-c-form-control[readonly] {
   cursor: default;
 }
+
+.kit-terminal-group > .kit-open-url {
+  flex: 0 0 auto;
+}
+
+// Let the copyable address shrink instead of pushing "Open" off the alert.
+.kit-open-url-address {
+  min-inline-size: 0;
+}
