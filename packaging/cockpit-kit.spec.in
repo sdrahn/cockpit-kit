@@ -79,3 +79,46 @@ appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/*
 %{_datadir}/metainfo/*
 
 %changelog
+* Tue Oct 27 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.10-1
+- Show web pages Kit opens (OAuth sign-in for providers and remote MCP
+  servers) in a panel above the terminal, with the full URL and Copy and
+  Open buttons, instead of Kit trying to start a browser on the server
+- Finish sign-ins that redirect to a "localhost" callback by pasting the
+  browser's final address into that panel
+
+* Tue Oct 20 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.9-1
+- Copy text selected with the mouse in Kit's TUI to the browser clipboard
+  (Kit copies via OSC 52); Shift+drag (Option+drag on macOS) selects in
+  the terminal instead
+
+* Thu Oct 15 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.8-1
+- List the page above Tools, next to MCP Gateway
+- Attach the source tarball to each GitHub release
+
+* Mon Sep 07 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.7-1
+- Show the working directory picker in the terminal's toolbar row
+
+* Mon Sep 07 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.6-1
+- Fill the available height with the terminal by measuring it, fixing
+  the terminal shrinking in 0.1.5
+
+* Mon Sep 07 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.5-1
+- Make the terminal fill the available height
+
+* Wed Sep 02 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.4-1
+- Align provider status rows into columns on Overview and Authentication
+- Match the page's top padding to its left padding
+
+* Wed Sep 02 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.3-1
+- Show per-provider authentication status on the Authentication tab
+- Show a traffic-light authentication summary on the Overview tab
+
+* Wed Sep 02 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.2-1
+- Rename the navigation entry to "AI Assistant - Kit"
+
+* Tue Sep 01 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.1-1
+- Fix the Models tab provider filter passing invalid arguments to
+  "kit models"
+
+* Mon Aug 31 2026 Daniel Rahn <drahn76@gmail.com> - 0.1.0-1
+- Initial package
